@@ -21,13 +21,13 @@ function timeAgo(ts: number) {
 
 const QUICK_AMOUNTS = [5000, 10000, 25000];
 
-const BUBBLE_COLORS = [
-  "bg-pink-100 text-pink-700",
-  "bg-blue-100 text-blue-700",
-  "bg-green-100 text-green-700",
-  "bg-purple-100 text-purple-700",
-  "bg-yellow-100 text-yellow-700",
-  "bg-orange-100 text-orange-700",
+const BUBBLE_STYLES = [
+  { bg: "bg-[#ffe0f0]", border: "border-[#ffaed7]", text: "text-[#8a3060]" },
+  { bg: "bg-[#d8e8ff]", border: "border-[#7ba1ff]", text: "text-[#2a4080]" },
+  { bg: "bg-[#e0ffd8]", border: "border-[#a8e6a3]", text: "text-[#2a6020]" },
+  { bg: "bg-[#f0e0ff]", border: "border-[#c4a8ff]", text: "text-[#4a2080]" },
+  { bg: "bg-[#fff8d0]", border: "border-[#ffe070]", text: "text-[#6a5020]" },
+  { bg: "bg-[#d8f8ff]", border: "border-[#a3e4ff]", text: "text-[#205060]" },
 ];
 
 function FloatingMessages({ messages }: { messages: FundMessage[] }) {
@@ -41,34 +41,49 @@ function FloatingMessages({ messages }: { messages: FundMessage[] }) {
 
   if (messages.length === 0) {
     return (
-      <div className="flex flex-1 items-center justify-center py-8">
-        <p className="text-sm text-gray-300">아직 메시지가 없어요. 첫 번째 마음을 보내보세요!</p>
+      <div className="flex flex-1 flex-col items-center justify-center gap-2 py-8">
+        <span className="text-3xl">💌</span>
+        <p className="text-sm text-[var(--color-y2k-blue)]/50">
+          아직 메시지가 없어요. 첫 번째 마음을 보내보세요!
+        </p>
       </div>
     );
   }
 
   return (
-    <div ref={containerRef} className="relative flex flex-1 flex-col gap-3 overflow-y-auto px-1 py-4">
+    <div
+      ref={containerRef}
+      className="relative flex flex-1 flex-col gap-4 overflow-y-auto py-4"
+    >
       {messages.map((msg, i) => {
         const isRight = i % 2 === 1;
-        const color = BUBBLE_COLORS[i % BUBBLE_COLORS.length];
+        const style = BUBBLE_STYLES[i % BUBBLE_STYLES.length];
         return (
           <div
             key={msg.id}
-            className={`flex flex-col gap-0.5 animate-[fadeUp_0.4s_ease-out] ${isRight ? "items-end" : "items-start"}`}
-            style={{ animationDelay: `${i * 60}ms`, animationFillMode: "both" }}
+            className={`flex flex-col gap-1 animate-[fadeUp_0.4s_ease-out] ${isRight ? "items-end" : "items-start"}`}
+            style={{ animationDelay: `${i * 80}ms`, animationFillMode: "both" }}
           >
-            <span className="px-2 text-[10px] font-medium text-gray-400">
+            {/* Nickname badge */}
+            <span className="rounded-full border border-[var(--color-y2k-blue)]/20 bg-white/80 px-2.5 py-0.5 text-[10px] font-bold text-[var(--color-y2k-blue-dark)]">
               {msg.nickname}
             </span>
-            <div className={`max-w-[75%] rounded-2xl px-4 py-2.5 ${color}`}>
-              <p className="text-sm leading-relaxed">{msg.text}</p>
+            {/* Bubble */}
+            <div
+              className={`max-w-[80%] rounded-2xl border-2 px-4 py-3 shadow-sm ${style.bg} ${style.border}`}
+            >
+              <p className={`text-sm font-medium leading-relaxed ${style.text}`}>
+                {msg.text}
+              </p>
             </div>
-            <div className={`flex items-center gap-2 px-2 ${isRight ? "flex-row-reverse" : ""}`}>
-              <span className="text-[10px] font-semibold text-pink-400">
+            {/* Meta */}
+            <div className={`flex items-center gap-2 px-1 ${isRight ? "flex-row-reverse" : ""}`}>
+              <span className="text-[10px] font-extrabold text-[var(--color-y2k-pink-dark)]">
                 {formatWon(msg.amount)}
               </span>
-              <span className="text-[10px] text-gray-300">{timeAgo(msg.createdAt)}</span>
+              <span className="text-[10px] text-[var(--color-foreground)]/30">
+                {timeAgo(msg.createdAt)}
+              </span>
             </div>
           </div>
         );
@@ -126,145 +141,168 @@ export default function GiftDetailModal({
       onClick={onClose}
     >
       <div
-        className="flex h-[85vh] w-full max-w-md flex-col rounded-t-3xl bg-white sm:h-auto sm:max-h-[85vh] sm:rounded-3xl"
+        className="y2k-window flex h-[85vh] w-full max-w-md flex-col sm:h-auto sm:max-h-[85vh]"
+        style={{ borderRadius: "16px 16px 0 0" }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* 헤더 */}
-        <div className="flex items-center justify-between border-b border-gray-100 px-6 pt-6 pb-4">
-          <div className="flex items-center gap-3">
-            <div className={`flex h-10 w-10 items-center justify-center rounded-xl text-xl ${gift.bgColor}`}>
-              {gift.emoji}
-            </div>
-            <div>
-              <h2 className="text-base font-bold text-gray-800">{gift.name}</h2>
-              <p className="text-xs text-gray-400">{percent}% 달성 · {formatWon(gift.currentAmount)}</p>
-            </div>
-          </div>
+        {/* Titlebar */}
+        <div className="y2k-titlebar">
+          <div className="y2k-dot" style={{ background: "#ff7070" }} />
+          <div className="y2k-dot" style={{ background: "#ffcc4d" }} />
+          <div className="y2k-dot" style={{ background: "#73e06e" }} />
+          <span className="ml-1 flex-1 truncate text-xs font-bold text-white">
+            {gift.emoji} {gift.name}
+          </span>
           <button
             onClick={onClose}
-            className="rounded-full p-1.5 text-gray-400 hover:bg-gray-100"
+            className="rounded-md px-2 py-0.5 text-[10px] font-bold text-white/80 transition-colors hover:bg-white/20"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
+            ✕
           </button>
         </div>
 
-        {/* 프로그레스 바 */}
-        <div className="px-6 pt-3">
-          <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
-            <div
-              className="h-full rounded-full bg-gradient-to-r from-pink-400 to-pink-300 transition-all duration-500"
-              style={{ width: `${Math.min(percent, 100)}%` }}
-            />
+        {/* Progress section */}
+        <div className="flex items-center gap-3 border-b-2 border-[var(--color-y2k-blue)]/10 bg-white/60 px-4 py-3">
+          <div className="flex-1">
+            <div className="flex justify-between text-[11px]">
+              <span className="font-bold text-[var(--color-y2k-blue)]">
+                ⭐ {percent}% 달성
+              </span>
+              <span className="font-extrabold text-[var(--color-foreground)]">
+                {formatWon(gift.currentAmount)} / {formatWon(gift.price)}
+              </span>
+            </div>
+            <div className="mt-1.5 h-3 w-full overflow-hidden rounded-full border border-[var(--color-y2k-blue)]/20 bg-white">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-[var(--color-y2k-blue)] to-[var(--color-y2k-cyan)] transition-all duration-500"
+                style={{ width: `${Math.min(percent, 100)}%` }}
+              />
+            </div>
           </div>
         </div>
 
-        {/* 탭 */}
-        <div className="flex gap-1 px-6 pt-4">
+        {/* Tabs */}
+        <div className="flex gap-2 border-b-2 border-[var(--color-y2k-blue)]/10 bg-white/40 px-4 py-2">
           <button
             onClick={() => setTab("messages")}
-            className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+            className={`rounded-full border-2 px-4 py-1.5 text-xs font-bold transition-all ${
               tab === "messages"
-                ? "bg-pink-500 text-white"
-                : "bg-gray-100 text-gray-500"
+                ? "border-[var(--color-y2k-blue)] bg-[var(--color-y2k-blue)] text-white shadow-sm"
+                : "border-[var(--color-y2k-blue)]/30 bg-white text-[var(--color-y2k-blue)]"
             }`}
           >
-            메시지 ({gift.messages.length})
+            💬 메시지 ({gift.messages.length})
           </button>
           <button
             onClick={() => setTab("fund")}
-            className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-colors ${
+            className={`rounded-full border-2 px-4 py-1.5 text-xs font-bold transition-all ${
               tab === "fund"
-                ? "bg-pink-500 text-white"
-                : "bg-gray-100 text-gray-500"
+                ? "border-[var(--color-y2k-pink-dark)] bg-[var(--color-y2k-pink)] text-[#6e1040] shadow-sm"
+                : "border-[var(--color-y2k-pink)]/30 bg-white text-[var(--color-y2k-pink-dark)]"
             }`}
           >
-            참여하기
+            💝 참여하기
           </button>
         </div>
 
-        {/* 컨텐츠 */}
-        <div className="flex min-h-0 flex-1 flex-col px-6 pb-6">
+        {/* Content */}
+        <div className="flex min-h-0 flex-1 flex-col bg-[var(--color-y2k-window-bg)] px-4 pb-4">
           {tab === "messages" ? (
             <FloatingMessages messages={gift.messages} />
           ) : isComplete ? (
-            <div className="flex flex-1 flex-col items-center justify-center gap-2 rounded-xl">
-              <span className="text-4xl">🎉</span>
-              <p className="font-bold text-pink-600">목표 금액 달성!</p>
-              <p className="text-sm text-pink-500">모두의 마음이 모였어요!</p>
+            <div className="flex flex-1 flex-col items-center justify-center gap-3">
+              <span className="text-5xl">🎉</span>
+              <p className="text-lg font-extrabold text-[var(--color-y2k-blue-dark)]">
+                목표 금액 달성!
+              </p>
+              <p className="text-sm text-[var(--color-y2k-blue)]">
+                모두의 마음이 모였어요!
+              </p>
             </div>
           ) : showSuccess ? (
-            <div className="flex flex-1 flex-col items-center justify-center gap-2 rounded-xl">
-              <span className="text-4xl">💝</span>
-              <p className="font-bold text-green-600">마음 전달 완료!</p>
-              <p className="text-sm text-green-500">감사합니다!</p>
+            <div className="flex flex-1 flex-col items-center justify-center gap-3">
+              <span className="text-5xl">💝</span>
+              <p className="text-lg font-extrabold text-[var(--color-y2k-pink-dark)]">
+                마음 전달 완료!
+              </p>
               <button
-                onClick={() => { setShowSuccess(false); setTab("messages"); }}
-                className="mt-2 rounded-full bg-green-500 px-6 py-2 text-sm font-semibold text-white"
+                onClick={() => {
+                  setShowSuccess(false);
+                  setTab("messages");
+                }}
+                className="y2k-btn mt-2"
               >
-                메시지 보기
+                ⭐ 메시지 보기
               </button>
             </div>
           ) : (
-            <div className="flex flex-1 flex-col gap-4 pt-4">
-              {/* 메시지 입력 */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-gray-500">한마디 남기기</label>
+            <div className="flex flex-1 flex-col gap-3 pt-4">
+              {/* Message input */}
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-[var(--color-y2k-blue-dark)]">
+                  💌 한마디 남기기
+                </label>
                 <textarea
                   value={messageText}
                   onChange={(e) => setMessageText(e.target.value)}
                   placeholder="축하 메시지, 응원의 한마디를 남겨보세요!"
                   maxLength={100}
                   rows={2}
-                  className="resize-none rounded-xl border-2 border-gray-200 px-4 py-3 text-sm outline-none transition-colors placeholder:text-gray-300 focus:border-pink-300"
+                  className="y2k-input resize-none text-sm"
                 />
-                <p className="text-right text-[10px] text-gray-300">{messageText.length}/100</p>
+                <p className="text-right text-[10px] text-[var(--color-foreground)]/30">
+                  {messageText.length}/100
+                </p>
               </div>
 
-              {/* 빠른 선택 */}
+              {/* Quick amounts */}
               <div className="flex gap-2">
                 {QUICK_AMOUNTS.map((amount) => (
                   <button
                     key={amount}
                     onClick={() => handleQuickAmount(amount)}
                     disabled={amount > remaining}
-                    className="flex-1 rounded-xl border-2 border-pink-100 py-2.5 text-sm font-semibold text-pink-500 transition-colors hover:bg-pink-50 disabled:border-gray-100 disabled:text-gray-300"
+                    className="flex-1 rounded-xl border-2 border-[var(--color-y2k-blue)]/30 bg-white py-2.5 text-sm font-bold text-[var(--color-y2k-blue)] transition-all hover:border-[var(--color-y2k-blue)] hover:bg-[var(--color-y2k-blue)]/5 disabled:opacity-30"
                   >
                     {formatWon(amount)}
                   </button>
                 ))}
               </div>
 
-              {/* 직접 입력 */}
-              <div className="flex flex-col gap-1.5">
-                <div className="flex overflow-hidden rounded-xl border-2 border-gray-200 focus-within:border-pink-300">
-                  <span className="flex items-center bg-gray-50 px-3 text-sm text-gray-400">{"₩"}</span>
+              {/* Amount input */}
+              <div className="flex flex-col gap-1">
+                <div className="flex overflow-hidden rounded-xl border-2.5 border-[var(--color-y2k-blue)] bg-white">
+                  <span className="flex items-center bg-[var(--color-y2k-blue)]/10 px-3 text-sm font-bold text-[var(--color-y2k-blue)]">
+                    {"₩"}
+                  </span>
                   <input
                     type="number"
                     value={inputValue}
-                    onChange={(e) => { setInputValue(e.target.value); setError(""); }}
+                    onChange={(e) => {
+                      setInputValue(e.target.value);
+                      setError("");
+                    }}
                     placeholder="금액을 입력하세요"
                     className="w-full px-3 py-3 text-sm outline-none"
                     min={0}
                     max={remaining}
                   />
                 </div>
-                {error && <p className="text-xs text-red-500">{error}</p>}
-                <p className="text-xs text-gray-400">남은 금액: {formatWon(remaining)}</p>
+                {error && (
+                  <p className="text-xs font-medium text-[#e04060]">{error}</p>
+                )}
+                <p className="text-xs text-[var(--color-foreground)]/40">
+                  남은 금액: {formatWon(remaining)}
+                </p>
               </div>
 
-              {/* 참여 버튼 */}
-              <button
-                onClick={handleSubmit}
-                className="w-full rounded-xl bg-gradient-to-r from-pink-500 to-pink-400 py-3.5 text-sm font-bold text-white shadow-lg shadow-pink-200 transition-transform active:scale-[0.98]"
-              >
-                마음 보내기 💌
+              {/* Submit */}
+              <button onClick={handleSubmit} className="y2k-btn-pink y2k-btn w-full text-center">
+                💌 마음 보내기
               </button>
 
-              <div className="rounded-xl bg-yellow-50 px-4 py-2.5 text-center text-[11px] text-yellow-700">
-                이것은 모의 체험입니다. 실제 결제는 진행되지 않아요.
+              <div className="rounded-xl border-2 border-dashed border-[var(--color-y2k-yellow)] bg-[var(--color-y2k-yellow)]/30 px-3 py-2 text-center text-[11px] text-[#8a7020]">
+                ⚡ 모의 체험입니다. 실제 결제는 진행되지 않아요.
               </div>
             </div>
           )}

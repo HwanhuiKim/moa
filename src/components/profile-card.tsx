@@ -1,15 +1,27 @@
 "use client";
 
 import { profile } from "@/lib/data";
+import Y2kWindow from "./y2k-window";
 
 export default function ProfileCard() {
   return (
-    <div className="flex flex-col items-center gap-3 rounded-2xl bg-white p-6 shadow-sm">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full border-4 border-pink-100 bg-pink-50 text-4xl">
-        🧑
+    <Y2kWindow title={`${profile.name}'s Wishlist`} icon="💫">
+      <div className="flex flex-col items-center gap-3 py-2">
+        <div className="float-animation relative">
+          <div className="flex h-20 w-20 items-center justify-center rounded-full border-[3px] border-[var(--color-y2k-blue)] bg-gradient-to-br from-[var(--color-y2k-cyan)] to-[var(--color-y2k-purple)] text-4xl shadow-md">
+            🧑
+          </div>
+          <span className="absolute -right-1 -bottom-1 text-lg">✨</span>
+        </div>
+        <h2 className="text-lg font-extrabold text-[var(--color-y2k-blue-dark)]">
+          {profile.name}
+        </h2>
+        <div className="rounded-xl border-2 border-dashed border-[var(--color-y2k-blue)] bg-white/60 px-4 py-2">
+          <p className="text-center text-sm text-[var(--color-foreground)]">
+            {profile.message}
+          </p>
+        </div>
       </div>
-      <h2 className="text-lg font-bold text-gray-800">{profile.name}</h2>
-      <p className="text-center text-sm text-gray-500">{profile.message}</p>
-    </div>
+    </Y2kWindow>
   );
 }

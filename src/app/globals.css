@@ -2,8 +2,19 @@
 @import "pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css";
 
 @theme inline {
-  --color-background: #f9fafb;
-  --color-foreground: #1f2937;
+  --color-background: #dff0a1;
+  --color-foreground: #2a2d5e;
+  --color-y2k-lime: #c6e94e;
+  --color-y2k-blue: #7ba1ff;
+  --color-y2k-blue-dark: #5576cc;
+  --color-y2k-pink: #ffaed7;
+  --color-y2k-pink-dark: #ff7eb8;
+  --color-y2k-yellow: #fff4a3;
+  --color-y2k-cyan: #a3e4ff;
+  --color-y2k-purple: #c4a8ff;
+  --color-y2k-green: #a8e6a3;
+  --color-y2k-window-bg: #eef6ff;
+  --color-y2k-titlebar: #8cb4ff;
   --font-sans: "Pretendard Variable", "Pretendard", -apple-system,
     BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI",
     "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji",
@@ -11,9 +22,23 @@
 }
 
 body {
-  background: var(--color-background);
+  background: linear-gradient(135deg, #dff0a1 0%, #c9e87a 30%, #e0f0b0 60%, #d4eea0 100%);
   color: var(--color-foreground);
   font-family: var(--font-sans);
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    radial-gradient(circle at 10% 15%, rgba(123, 161, 255, 0.15) 0%, transparent 40%),
+    radial-gradient(circle at 85% 25%, rgba(255, 174, 215, 0.12) 0%, transparent 35%),
+    radial-gradient(circle at 50% 80%, rgba(163, 228, 255, 0.1) 0%, transparent 30%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 @keyframes fadeUp {
@@ -27,6 +52,21 @@ body {
   }
 }
 
+@keyframes twinkle {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -34,4 +74,88 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.y2k-window {
+  background: var(--color-y2k-window-bg);
+  border: 2.5px solid var(--color-y2k-blue);
+  border-radius: 16px;
+  box-shadow:
+    4px 4px 0px rgba(91, 118, 204, 0.3),
+    0 8px 24px rgba(91, 118, 204, 0.08);
+  overflow: hidden;
+}
+
+.y2k-titlebar {
+  background: linear-gradient(90deg, #8cb4ff, #a3c4ff, #8cb4ff);
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 2px solid rgba(91, 118, 204, 0.3);
+}
+
+.y2k-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+}
+
+.y2k-btn {
+  background: linear-gradient(180deg, #c6e94e, #a8d430);
+  border: 2px solid #8ab820;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 700;
+  color: #3a5a10;
+  box-shadow: 2px 2px 0px rgba(100, 160, 20, 0.3);
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.y2k-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 3px 3px 0px rgba(100, 160, 20, 0.4);
+}
+
+.y2k-btn:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px 0px rgba(100, 160, 20, 0.3);
+}
+
+.y2k-btn-pink {
+  background: linear-gradient(180deg, #ffaed7, #ff8ec4);
+  border: 2px solid #e070a0;
+  color: #6e1040;
+  box-shadow: 2px 2px 0px rgba(200, 100, 150, 0.3);
+}
+
+.y2k-btn-pink:hover {
+  box-shadow: 3px 3px 0px rgba(200, 100, 150, 0.4);
+}
+
+.y2k-input {
+  background: white;
+  border: 2.5px solid var(--color-y2k-blue);
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.y2k-input:focus {
+  border-color: var(--color-y2k-pink);
+  box-shadow: 0 0 0 3px rgba(255, 174, 215, 0.2);
+}
+
+.star-decoration {
+  position: absolute;
+  pointer-events: none;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
 }

@@ -19,36 +19,51 @@ export default function NicknameModal() {
   }
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 px-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 px-4">
       <form
         onSubmit={handleSubmit}
-        className="flex w-full max-w-sm flex-col items-center gap-6 rounded-3xl bg-white p-8 shadow-xl"
+        className="y2k-window w-full max-w-sm animate-[fadeUp_0.3s_ease-out]"
       >
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-pink-50 text-5xl">
-          👋
+        {/* Titlebar */}
+        <div className="y2k-titlebar">
+          <div className="y2k-dot" style={{ background: "#ff7070" }} />
+          <div className="y2k-dot" style={{ background: "#ffcc4d" }} />
+          <div className="y2k-dot" style={{ background: "#73e06e" }} />
+          <span className="ml-1 text-xs font-bold text-white">
+            ✨ Welcome to moa!
+          </span>
         </div>
-        <div className="flex flex-col items-center gap-1">
-          <h2 className="text-xl font-bold text-gray-800">환영합니다!</h2>
-          <p className="text-center text-sm text-gray-500">
-            마음을 전할 때 사용할 닉네임을 알려주세요
-          </p>
+
+        <div className="flex flex-col items-center gap-5 p-6">
+          <div className="float-animation text-6xl">👋</div>
+
+          <div className="flex flex-col items-center gap-1">
+            <h2 className="text-xl font-extrabold text-[var(--color-y2k-blue-dark)]">
+              환영합니다!
+            </h2>
+            <p className="text-center text-sm text-[var(--color-foreground)]/70">
+              마음을 전할 때 사용할 닉네임을 알려주세요
+            </p>
+          </div>
+
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="닉네임을 입력하세요"
+            maxLength={12}
+            autoFocus
+            className="y2k-input w-full text-center"
+          />
+
+          <button
+            type="submit"
+            disabled={!input.trim()}
+            className="y2k-btn w-full text-center disabled:opacity-40"
+          >
+            ⭐ 시작하기
+          </button>
         </div>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="닉네임을 입력하세요"
-          maxLength={12}
-          autoFocus
-          className="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-center text-sm outline-none transition-colors focus:border-pink-300"
-        />
-        <button
-          type="submit"
-          disabled={!input.trim()}
-          className="w-full rounded-xl bg-gradient-to-r from-pink-500 to-pink-400 py-3.5 text-sm font-bold text-white shadow-lg shadow-pink-200 transition-all disabled:opacity-40"
-        >
-          시작하기
-        </button>
       </form>
     </div>
   );
