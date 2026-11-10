@@ -1,17 +1,19 @@
 "use client";
 
-import { profile } from "@/lib/data";
+import { useGifts } from "@/lib/gift-context";
 import Y2kWindow from "./y2k-window";
 
 export default function ProfileCard() {
+  const { profile } = useGifts();
+
   return (
     <Y2kWindow title={`${profile.name}'s Wishlist`} icon="💫">
       <div className="flex flex-col items-center gap-3 py-2">
         <div className="float-animation relative">
           <div className="flex h-20 w-20 items-center justify-center rounded-full border-[3px] border-[var(--color-y2k-blue)] bg-gradient-to-br from-[var(--color-y2k-cyan)] to-[var(--color-y2k-purple)] text-4xl shadow-md">
-            🧑
+            {profile.emoji}
           </div>
-          <span className="absolute -right-1 -bottom-1 text-lg">✨</span>
+          <span className="absolute -right-1 -bottom-1 text-lg">{"✨"}</span>
         </div>
         <h2 className="text-lg font-extrabold text-[var(--color-y2k-blue-dark)]">
           {profile.name}

@@ -14,12 +14,15 @@ export interface Gift {
   emoji: string;
   bgColor: string;
   description: string;
+  productUrl: string;
   currentAmount: number;
   messages: FundMessage[];
 }
 
+export type UserRole = "owner" | "visitor" | "contributor";
+
 export interface Profile {
   name: string;
-  avatarUrl: string;
+  emoji: string;
   message: string;
 }

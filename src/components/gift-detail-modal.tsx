@@ -19,6 +19,14 @@ function timeAgo(ts: number) {
   return `${days}일 전`;
 }
 
+function getHostname(url: string) {
+  try {
+    return new URL(url).hostname.replace("www.", "");
+  } catch {
+    return url;
+  }
+}
+
 const AVATARS = ["🐰", "🐱", "🐶", "🦊", "🐻", "🐼", "🐸", "🐵"];
 const HEART_POSITIONS = [
   { top: "10%", left: "5%", delay: 0, size: 14 },
@@ -37,11 +45,9 @@ function ChatBubble({ msg, index }: { msg: FundMessage; index: number }) {
       className="flex items-start gap-2 animate-[fadeUp_0.35s_ease-out]"
       style={{ animationDelay: `${index * 60}ms`, animationFillMode: "both" }}
     >
-      {/* Avatar */}
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-white bg-gradient-to-br from-[#ffecd2] to-[#fcb69f] text-base shadow-sm">
         {avatar}
       </div>
-      {/* Content */}
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">
         <div className="flex items-baseline gap-2">
           <span className="text-[11px] font-bold text-[var(--color-foreground)]">
@@ -57,7 +63,6 @@ function ChatBubble({ msg, index }: { msg: FundMessage; index: number }) {
               {msg.text}
             </p>
           </div>
-          {/* Random heart sticker near some bubbles */}
           {index % 3 === 0 && (
             <span className="absolute -right-3 -bottom-1 float-animation text-sm">
               💕
@@ -130,7 +135,7 @@ export default function GiftDetailModal({
         style={{ borderRadius: "16px 16px 0 0" }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header bar — iMessage style */}
+        {/* Header bar */}
         <div className="flex items-center justify-between border-b border-[var(--color-y2k-blue)]/20 bg-[#f0f6ff] px-4 py-3">
           <button
             onClick={onClose}
@@ -148,12 +153,11 @@ export default function GiftDetailModal({
           <div className="w-5" />
         </div>
 
-        {/* Scrollable content — single flow */}
+        {/* Scrollable content */}
         <div
           ref={scrollRef}
           className="chat-bg relative flex-1 overflow-y-auto"
         >
-          {/* Floating heart decorations */}
           {HEART_POSITIONS.map((h, i) => (
             <span
               key={i}
@@ -166,12 +170,12 @@ export default function GiftDetailModal({
                 animationDelay: `${h.delay}s`,
               }}
             >
-              💗
+              {"💗"}
             </span>
           ))}
 
           <div className="relative z-10 flex flex-col gap-5 px-4 py-5">
-            {/* ── Section: Gift info ── */}
+            {/* Gift info */}
             <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-white/60 bg-white/70 p-4 shadow-sm backdrop-blur-sm">
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-[var(--color-y2k-cyan)]/30 to-[var(--color-y2k-purple)]/20 text-4xl">
                 {gift.emoji}
@@ -179,10 +183,25 @@ export default function GiftDetailModal({
               <p className="text-center text-xs leading-relaxed text-[var(--color-foreground)]/60">
                 {gift.description}
               </p>
+
+              {/* Product link */}
+              {gift.productUrl && (
+                <a
+                  href={gift.productUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 rounded-xl border-2 border-[var(--color-y2k-blue)]/25 bg-[var(--color-y2k-blue)]/5 px-3 py-1.5 text-xs font-bold text-[var(--color-y2k-blue)] transition-colors hover:bg-[var(--color-y2k-blue)]/15"
+                >
+                  <span>{"🔗"}</span>
+                  <span>{getHostname(gift.productUrl)}</span>
+                  <span className="text-[var(--color-y2k-blue)]/50">{"→"}</span>
+                </a>
+              )}
+
               <div className="w-full">
                 <div className="flex justify-between text-[11px]">
                   <span className="font-bold text-[var(--color-y2k-blue)]">
-                    ⭐ {percent}% 달성
+                    {"⭐"} {percent}% 달성
                   </span>
                   <span className="font-extrabold text-[var(--color-foreground)]">
                     {formatWon(gift.currentAmount)} / {formatWon(gift.price)}
@@ -197,18 +216,18 @@ export default function GiftDetailModal({
               </div>
             </div>
 
-            {/* ── Section: Messages ── */}
+            {/* Messages */}
             <div className="flex items-center gap-2">
               <div className="h-px flex-1 bg-[var(--color-y2k-blue)]/15" />
               <span className="text-[11px] font-bold text-[var(--color-y2k-blue)]/50">
-                💬 응원 메시지 {gift.messages.length}개
+                {"💬"} 응원 메시지 {gift.messages.length}개
               </span>
               <div className="h-px flex-1 bg-[var(--color-y2k-blue)]/15" />
             </div>
 
             {gift.messages.length === 0 ? (
               <div className="flex flex-col items-center gap-2 py-6">
-                <span className="text-3xl">💌</span>
+                <span className="text-3xl">{"💌"}</span>
                 <p className="text-sm text-[var(--color-foreground)]/30">
                   아직 메시지가 없어요. 첫 번째 마음을 보내보세요!
                 </p>
@@ -221,10 +240,10 @@ export default function GiftDetailModal({
               </div>
             )}
 
-            {/* ── Section: Send message + fund ── */}
+            {/* Send message + fund */}
             {showSuccess ? (
               <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-white/60 bg-white/70 py-8 shadow-sm backdrop-blur-sm">
-                <span className="text-5xl">💝</span>
+                <span className="text-5xl">{"💝"}</span>
                 <p className="text-lg font-extrabold text-[var(--color-y2k-pink-dark)]">
                   마음 전달 완료!
                 </p>
@@ -235,12 +254,12 @@ export default function GiftDetailModal({
                   onClick={() => setShowSuccess(false)}
                   className="y2k-btn mt-1"
                 >
-                  ⭐ 확인
+                  {"⭐"} 확인
                 </button>
               </div>
             ) : isComplete ? (
               <div className="flex flex-col items-center gap-3 rounded-2xl border-2 border-white/60 bg-white/70 py-8 shadow-sm">
-                <span className="text-5xl">🎉</span>
+                <span className="text-5xl">{"🎉"}</span>
                 <p className="text-lg font-extrabold text-[var(--color-y2k-blue-dark)]">
                   목표 금액 달성!
                 </p>
@@ -253,7 +272,7 @@ export default function GiftDetailModal({
                 <div className="flex items-center gap-2">
                   <div className="h-px flex-1 bg-[var(--color-y2k-pink)]/20" />
                   <span className="text-[11px] font-bold text-[var(--color-y2k-pink-dark)]/50">
-                    💌 한마디 남기기
+                    {"💌"} 한마디 남기기
                   </span>
                   <div className="h-px flex-1 bg-[var(--color-y2k-pink)]/20" />
                 </div>
@@ -271,7 +290,6 @@ export default function GiftDetailModal({
                     {messageText.length}/100
                   </p>
 
-                  {/* Quick amounts */}
                   <div className="flex gap-2">
                     {QUICK_AMOUNTS.map((amount) => (
                       <button
@@ -285,7 +303,6 @@ export default function GiftDetailModal({
                     ))}
                   </div>
 
-                  {/* Amount input */}
                   <div className="flex overflow-hidden rounded-xl border-2 border-[var(--color-y2k-blue)] bg-white">
                     <span className="flex items-center bg-[var(--color-y2k-blue)]/10 px-3 text-sm font-bold text-[var(--color-y2k-blue)]">
                       {"₩"}
@@ -314,24 +331,24 @@ export default function GiftDetailModal({
                     onClick={handleSubmit}
                     className="y2k-btn-pink y2k-btn w-full text-center"
                   >
-                    💌 마음 보내기
+                    {"💌"} 마음 보내기
                   </button>
                 </div>
 
                 <div className="rounded-xl border-2 border-dashed border-[var(--color-y2k-yellow)] bg-[var(--color-y2k-yellow)]/30 px-3 py-2 text-center text-[11px] text-[#8a7020]">
-                  ⚡ 모의 체험입니다. 실제 결제는 진행되지 않아요.
+                  {"⚡"} 모의 체험입니다. 실제 결제는 진행되지 않아요.
                 </div>
               </>
             )}
           </div>
         </div>
 
-        {/* Bottom bar — like iMessage */}
+        {/* Bottom bar */}
         <div className="flex items-center gap-2 border-t border-[var(--color-y2k-blue)]/15 bg-[#f0f6ff] px-3 py-2">
           <div className="flex items-center justify-center gap-1 py-1 text-[10px] text-[var(--color-foreground)]/30">
-            <span>⭐</span>
+            <span>{"⭐"}</span>
             <span>moa</span>
-            <span>⭐</span>
+            <span>{"⭐"}</span>
           </div>
           <div className="flex-1" />
           <span className="text-xs text-[var(--color-foreground)]/25">
