@@ -34,9 +34,16 @@ export default function GiftCard({
         )}
       </div>
       <div className="flex flex-col gap-2 p-4">
-        <h3 className="text-left text-sm font-bold text-gray-800">
-          {gift.name}
-        </h3>
+        <div className="flex items-center justify-between">
+          <h3 className="text-left text-sm font-bold text-gray-800">
+            {gift.name}
+          </h3>
+          {gift.messages.length > 0 && (
+            <span className="rounded-full bg-pink-100 px-2 py-0.5 text-[10px] font-semibold text-pink-500">
+              💬 {gift.messages.length}
+            </span>
+          )}
+        </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
           <div
             className="h-full rounded-full bg-gradient-to-r from-pink-400 to-pink-300 transition-all duration-500"
